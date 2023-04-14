@@ -1,4 +1,4 @@
-package lib.src.Game;
+package lib.src.game;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,8 +7,9 @@ import java.awt.event.MouseEvent;
 import java.io.*;
 import java.net.*;
 public class GameGUI extends JFrame {
+    // Initialize of Variable.
     public JFrame frame = new JFrame("Tic Tac Toe 5 Dimensions.");
-    private JLabel messageLabel = new JLabel("");
+    private JLabel messageLabel = new JLabel("", JLabel.CENTER);
     private ImageIcon icon;
     private ImageIcon opponentIcon;
 
@@ -22,14 +23,15 @@ public class GameGUI extends JFrame {
 
     public GameGUI(String serverAddress) throws Exception {
 
-        // Setup networking
+        // Setup socket to connect a server.
         socket = new Socket(serverAddress, PORT);
         in = new BufferedReader(new InputStreamReader(
                 socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
 
-        // Layout GUI
+        // Setup layout of board game.
         messageLabel.setBackground(Color.lightGray);
+        messageLabel.setFont(new Font("TimesRoman", Font.BOLD | Font.ITALIC, 18));
         frame.getContentPane().add(messageLabel, "South");
 
         JPanel boardPanel = new JPanel();
@@ -46,27 +48,29 @@ public class GameGUI extends JFrame {
         }
         frame.getContentPane().add(boardPanel, "Center");
     }
+
+    // Input a message from socket and read it. Check a message if the condition is equal a start message. It will be to set up and display it on a game gui.
     public void play() throws Exception {
         String response;
         try {
             response = in.readLine();
             if (response.startsWith("WELCOME")) {
                 char participant = response.charAt(8);
-                icon = new ImageIcon(participant == 'X' ? "lib/src/Assets/x.png" : "lib/src/Assets/o.png");
-                opponentIcon  = new ImageIcon(participant == 'X' ? "lib/src/Assets/o.png" : "lib/src/Assets/x.png");
-                frame.setTitle("Tic Tac Toe - Player " + participant);
+                icon = new ImageIcon(participant == 'X' ? "lib/src/assets/x.png" : "lib/src/assets/o.png");
+                opponentIcon  = new ImageIcon(participant == 'X' ? "lib/src/assets/o.png" : "lib/src/assets/x.png");
+                frame.setTitle("Tic Tac Toe - Player: " + participant);
             }
             while (true) {
                 response = in.readLine();
                 if (response.startsWith("VALID_MOVE")) {
-                    messageLabel.setText("Valid move, please wait");
+                    messageLabel.setText("You moved. Please wait a opponent player.");
                     currentSquare.setIcon(icon);
                     currentSquare.repaint();
                 } else if (response.startsWith("OPPONENT_MOVED")) {
                     int loc = Integer.parseInt(response.substring(15));
                     board[loc].setIcon(opponentIcon);
                     board[loc].repaint();
-                    messageLabel.setText("Opponent moved, your turn");
+                    messageLabel.setText("Opponent player moved. Your turn.");
                 } else if (response.startsWith("VICTORY")) {
                     messageLabel.setText("You win");
                     break;
@@ -86,7 +90,7 @@ public class GameGUI extends JFrame {
             socket.close();
         }
     }
-    //Graphical square in the client window.
+    // Create a Square class for main widget.
     static class Square extends JPanel {
         JLabel label = new JLabel((Icon)null);
 

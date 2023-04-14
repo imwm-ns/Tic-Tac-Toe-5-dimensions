@@ -1,6 +1,6 @@
-package lib.src.Server;
+package lib.src.server;
 
-import lib.src.Game.Game;
+import lib.src.game.Game;
 
 import java.io.IOException;
 import java.net.ServerSocket;

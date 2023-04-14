@@ -1,10 +1,12 @@
-package lib.src.Game;
+package lib.src.game;
 
 
 import java.net.*;
 import java.io.*;
 
 public class Game {
+    // Initialize of Variable.
+
     // A board of 25 squares.
     private Player[] board = new Player[25];
 
@@ -58,13 +60,14 @@ public class Game {
 
     // Create Thread by Player
     public class Player extends Thread {
+        // Initialize of Variable.
         char participant;
         Player opponent;
         Socket socket;
         BufferedReader input;
         PrintWriter output;
 
-        // Thread handler to initialize stream fields
+        // A constructor of player when connect to the game.
         public Player(Socket socket, char participant) {
             this.socket = socket;
             this.participant = participant;
@@ -78,12 +81,10 @@ public class Game {
             }
         }
 
-        // Accepts notification of who the opponent is.
         public void setOpponent(Player opponent) {
             this.opponent = opponent;
         }
 
-        // Handles the otherPlayerMoved message.
         public void otherPlayerMoved(int location) {
             output.println("OPPONENT_MOVED " + location);
             output.println(
@@ -92,17 +93,18 @@ public class Game {
 
         public void run() {
             try {
-                // The thread is only started after everyone connects.
-                output.println("MESSAGE All players connected");
+                // Tell the second player to wait the fist player.
+                output.println("MESSAGE Please wait the first player move.");
 
                 // Tell the first player that it is his/her turn.
                 if (participant == 'X') {
                     output.println("MESSAGE Your move");
                 }
 
-                // Repeatedly get commands from the client and process them.
+                // The main logic of the game. if command variable read from output stream of socket.
                 while (true) {
                     String command = input.readLine();
+                    // If the first of word in command is equal move. Read location of the point and call makeMove method to select symbol on the board.
                     if (command.startsWith("MOVE")) {
                         int location = Integer.parseInt(command.substring(5));
                         if (makeMove(location, this)) {
@@ -110,15 +112,15 @@ public class Game {
                             output.println(hasWinner() ? "VICTORY"
                                     : boardFilledUp() ? "TIE"
                                     : "");
-                        } else {
-                            output.println("MESSAGE ?");
+                        } else { // If You click an empty box on the board without your turn. A status show a message to you.
+                            output.println("MESSAGE Not your turn.");
                         }
                     } else if (command.startsWith("QUIT")) {
                         return;
                     }
                 }
             } catch (IOException e) {
-                System.out.println("Player died: " + e);
+                e.printStackTrace();
             } finally {
                 try {
                     socket.close();

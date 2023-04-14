@@ -1,6 +1,6 @@
-package lib.src.Client;
+package lib.src.client;
 
-import lib.src.Game.GameGUI;
+import lib.src.game.GameGUI;
 
 import javax.swing.*;
 
@@ -11,7 +11,7 @@ public class Client {
         // Add server address to GameGUI, set window size and play game.
         GameGUI gui = new GameGUI(serverAddress);
         gui.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        gui.frame.setSize(700, 700);
+        gui.frame.setSize(500, 500);
         gui.frame.setVisible(true);
         gui.frame.setResizable(false);
         gui.play();
