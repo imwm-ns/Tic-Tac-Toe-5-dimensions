@@ -16,7 +16,7 @@ public class GameGUI extends JFrame {
     private Square[] board = new Square[25];
     private Square currentSquare;
 
-    private static int PORT = 12345;
+    private static int PORT = 8901;
     private Socket socket;
     private BufferedReader in;
     private PrintWriter out;
@@ -58,7 +58,7 @@ public class GameGUI extends JFrame {
                 char participant = response.charAt(8);
                 icon = new ImageIcon(participant == 'X' ? "lib/src/assets/x.png" : "lib/src/assets/o.png");
                 opponentIcon  = new ImageIcon(participant == 'X' ? "lib/src/assets/o.png" : "lib/src/assets/x.png");
-                frame.setTitle("Tic Tac Toe - Player: " + participant);
+                frame.setTitle("Tic Tac Toe - Player " + participant);
             }
             while (true) {
                 response = in.readLine();
