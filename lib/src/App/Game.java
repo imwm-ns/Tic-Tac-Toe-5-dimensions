@@ -1,4 +1,4 @@
-package lib.src.game;
+package lib.src.App;
 
 
 import java.net.*;
@@ -103,10 +103,10 @@ public class Game {
 
                 // The main logic of the game. if command variable read from output stream of socket.
                 while (true) {
-                    String command = input.readLine();
-                    // If the first of word in command is equal move. Read location of the point and call makeMove method to select symbol on the board.
-                    if (command.startsWith("MOVE")) {
-                        int location = Integer.parseInt(command.substring(5));
+                    String response = input.readLine();
+                    // If the first of word in response is equal move. Read location of the point and call makeMove method to select symbol on the board.
+                    if (response.startsWith("MOVE")) {
+                        int location = Integer.parseInt(response.substring(5));
                         if (makeMove(location, this)) {
                             output.println("VALID_MOVE");
                             output.println(hasWinner() ? "VICTORY"
@@ -115,7 +115,7 @@ public class Game {
                         } else { // If You click an empty box on the board without your turn. A status show a message to you.
                             output.println("MESSAGE Not your turn.");
                         }
-                    } else if (command.startsWith("QUIT")) {
+                    } else if (response.startsWith("QUIT")) {
                         return;
                     }
                 }

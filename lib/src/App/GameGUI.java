@@ -1,4 +1,4 @@
-package lib.src.game;
+package lib.src.App;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,16 +18,16 @@ public class GameGUI extends JFrame {
 
     private static int PORT = 8901;
     private Socket socket;
-    private BufferedReader in;
-    private PrintWriter out;
+    private BufferedReader input;
+    private PrintWriter output;
 
     public GameGUI(String serverAddress) throws Exception {
 
         // Setup socket to connect a server.
         socket = new Socket(serverAddress, PORT);
-        in = new BufferedReader(new InputStreamReader(
+        input = new BufferedReader(new InputStreamReader(
                 socket.getInputStream()));
-        out = new PrintWriter(socket.getOutputStream(), true);
+        output = new PrintWriter(socket.getOutputStream(), true);
 
         // Setup layout of board game.
         messageLabel.setBackground(Color.lightGray);
@@ -43,7 +43,7 @@ public class GameGUI extends JFrame {
             board[i].addMouseListener(new MouseAdapter() {
                 public void mousePressed(MouseEvent e) {
                     currentSquare = board[j];
-                    out.println("MOVE " + j);}});
+                    output.println("MOVE " + j);}});
             boardPanel.add(board[i]);
         }
         frame.getContentPane().add(boardPanel, "Center");
@@ -53,7 +53,7 @@ public class GameGUI extends JFrame {
     public void play() throws Exception {
         String response;
         try {
-            response = in.readLine();
+            response = input.readLine();
             if (response.startsWith("WELCOME")) {
                 char participant = response.charAt(8);
                 icon = new ImageIcon(participant == 'X' ? "lib/src/assets/x.png" : "lib/src/assets/o.png");
@@ -61,15 +61,15 @@ public class GameGUI extends JFrame {
                 frame.setTitle("Tic Tac Toe - Player " + participant);
             }
             while (true) {
-                response = in.readLine();
+                response = input.readLine();
                 if (response.startsWith("VALID_MOVE")) {
                     messageLabel.setText("You moved. Please wait a opponent player.");
                     currentSquare.setIcon(icon);
                     currentSquare.repaint();
                 } else if (response.startsWith("OPPONENT_MOVED")) {
-                    int loc = Integer.parseInt(response.substring(15));
-                    board[loc].setIcon(opponentIcon);
-                    board[loc].repaint();
+                    int location = Integer.parseInt(response.substring(15));
+                    board[location].setIcon(opponentIcon);
+                    board[location].repaint();
                     messageLabel.setText("Opponent player moved. Your turn.");
                 } else if (response.startsWith("VICTORY")) {
                     messageLabel.setText("You win");
@@ -84,7 +84,7 @@ public class GameGUI extends JFrame {
                     messageLabel.setText(response.substring(8));
                 }
             }
-            out.println("QUIT");
+            output.println("QUIT");
         }
         finally {
             socket.close();
