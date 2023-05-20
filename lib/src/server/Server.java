@@ -17,12 +17,12 @@ public class Server {
             while (true) {
                 Game game = new Game();
                 Game.Player player1 = game.new Player(listener.accept(), 'X');
-                System.out.println("Match " + match);
                 System.out.println("Player " + numberPlayer + " connected.");
                 numberPlayer++;
                 Game.Player player2 = game.new Player(listener.accept(), 'O');
                 System.out.println("Player " + numberPlayer + " connected.");
                 numberPlayer++;
+                System.out.println("Game Start by player" + (numberPlayer - 1) + " and player" + numberPlayer);
                 // Set player opponent of Player 1.
                 player1.setOpponent(player2);
                 // Set player opponent of Player 2.

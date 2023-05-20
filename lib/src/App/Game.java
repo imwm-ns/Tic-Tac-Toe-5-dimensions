@@ -1,6 +1,5 @@
 package lib.src.App;
 
-
 import java.net.*;
 import java.io.*;
 
@@ -16,14 +15,14 @@ public class Game {
     // Check who is a winner.
     public boolean hasWinner() {
         return
-                // Check for wins in 2D planes
+                // Check for wins in rows
                 (board[0] != null && board[0] == board[1] && board[0] == board[2] && board[0] == board[3] && board[0] == board[4])
                         || (board[5] != null && board[5] == board[6] && board[5] == board[7] && board[5] == board[8] && board[5] == board[9])
                         || (board[10] != null && board[10] == board[11] && board[10] == board[12] && board[10] == board[13] && board[10] == board[14])
                         || (board[15] != null && board[15] == board[16] && board[15] == board[17] && board[15] == board[18] && board[15] == board[19])
                         || (board[20] != null && board[20] == board[21] && board[20] == board[22] && board[20] == board[23] && board[20] == board[24])
 
-                        // Check for wins in 3D planes
+                        // Check for wins in columns
                         || (board[0] != null && board[0] == board[5] && board[0] == board[10] && board[0] == board[15] && board[0] == board[20])
                         || (board[1] != null && board[1] == board[6] && board[1] == board[11] && board[1] == board[16] && board[1] == board[21])
                         || (board[2] != null && board[2] == board[7] && board[2] == board[12] && board[2] == board[17] && board[2] == board[22])
@@ -74,10 +73,10 @@ public class Game {
             try {
                 input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 output = new PrintWriter(socket.getOutputStream(), true);
-                output.println("WELCOME " + participant);
+                output.println("WELCOME " + participant); // Welcome X, Welcome Y
                 output.println("MESSAGE Waiting for opponent to connect");
             } catch (IOException e) {
-                System.out.println("Player died: " + e);
+                e.printStackTrace();
             }
         }
 
@@ -91,6 +90,7 @@ public class Game {
                     hasWinner() ? "DEFEAT" : boardFilledUp() ? "TIE" : "");
         }
 
+        @Override
         public void run() {
             try {
                 // Tell the second player to wait the fist player.
@@ -101,7 +101,7 @@ public class Game {
                     output.println("MESSAGE Your move");
                 }
 
-                // The main logic of the game. if command variable read from output stream of socket.
+                // The main logic of the game. if response variable read input from output stream of socket.
                 while (true) {
                     String response = input.readLine();
                     // If the first of word in response is equal move. Read location of the point and call makeMove method to select symbol on the board.

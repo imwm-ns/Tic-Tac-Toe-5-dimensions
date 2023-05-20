@@ -9,7 +9,7 @@ import java.net.*;
 public class GameGUI extends JFrame {
     // Initialize of Variable.
     public JFrame frame = new JFrame("Tic Tac Toe 5 Dimensions.");
-    private JLabel messageLabel = new JLabel("", JLabel.CENTER);
+    private JLabel label = new JLabel("", JLabel.CENTER);
     private ImageIcon icon;
     private ImageIcon opponentIcon;
 
@@ -30,13 +30,15 @@ public class GameGUI extends JFrame {
         output = new PrintWriter(socket.getOutputStream(), true);
 
         // Setup layout of board game.
-        messageLabel.setBackground(Color.lightGray);
-        messageLabel.setFont(new Font("TimesRoman", Font.BOLD | Font.ITALIC, 18));
-        frame.getContentPane().add(messageLabel, "South");
+        label.setBackground(Color.lightGray);
+        label.setFont(new Font("TimesRoman", Font.BOLD | Font.ITALIC, 18));
+        frame.getContentPane().add(label, "South");
 
         JPanel boardPanel = new JPanel();
         boardPanel.setBackground(Color.black);
         boardPanel.setLayout(new GridLayout(5, 5, 2, 2));
+
+        // Setup board[i] is square and add mouse listener when player click on it. It sent a message to server by socket.
         for (int i = 0; i < board.length; i++) {
             final int j = i;
             board[i] = new Square();
@@ -63,33 +65,38 @@ public class GameGUI extends JFrame {
             while (true) {
                 response = input.readLine();
                 if (response.startsWith("VALID_MOVE")) {
-                    messageLabel.setText("You moved. Please wait a opponent player.");
+                    label.setText("You moved. Please wait a opponent player.");
                     currentSquare.setIcon(icon);
                     currentSquare.repaint();
                 } else if (response.startsWith("OPPONENT_MOVED")) {
                     int location = Integer.parseInt(response.substring(15));
                     board[location].setIcon(opponentIcon);
                     board[location].repaint();
-                    messageLabel.setText("Opponent player moved. Your turn.");
+                    label.setText("Opponent player moved. Your turn.");
                 } else if (response.startsWith("VICTORY")) {
-                    messageLabel.setText("You win");
+                    label.setText("You win");
                     break;
                 } else if (response.startsWith("DEFEAT")) {
-                    messageLabel.setText("You lose");
+                    label.setText("You lose");
                     break;
                 } else if (response.startsWith("TIE")) {
-                    messageLabel.setText("You tied");
+                    label.setText("You tied");
                     break;
                 } else if (response.startsWith("MESSAGE")) {
-                    messageLabel.setText(response.substring(8));
+                    label.setText(response.substring(8));
                 }
             }
             output.println("QUIT");
         }
         finally {
-            socket.close();
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
+    
     // Create a Square class for main widget.
     static class Square extends JPanel {
         JLabel label = new JLabel((Icon)null);
