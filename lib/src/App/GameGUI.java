@@ -57,7 +57,7 @@ public class GameGUI extends JFrame {
         try {
             response = input.readLine();
             if (response.startsWith("WELCOME")) {
-                char participant = response.charAt(8);
+                char participant = response.charAt(8); // X, Y
                 icon = new ImageIcon(participant == 'X' ? "lib/src/assets/x.png" : "lib/src/assets/o.png");
                 opponentIcon  = new ImageIcon(participant == 'X' ? "lib/src/assets/o.png" : "lib/src/assets/x.png");
                 frame.setTitle("Tic Tac Toe - Player " + participant);

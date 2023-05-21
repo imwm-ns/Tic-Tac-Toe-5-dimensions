@@ -8,7 +8,6 @@ import lib.src.App.Game;
 public class Server {
     private static final int PORT = 8901;
     private static int numberPlayer = 1;
-    private static int match = 1;
     public static void main(String[] args) throws Exception {
         // Create a socket to connect between 2 client.
         ServerSocket listener = new ServerSocket(PORT);
@@ -31,7 +30,6 @@ public class Server {
                 // Start game Player1, Player2.
                 player1.start();
                 player2.start();
-                match++;
             }
         } catch (IOException e) { // If It has exception. Throw it to catch function and display it on terminal.
           e.printStackTrace();
